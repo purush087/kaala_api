@@ -68,7 +68,7 @@ class UserLogin(Resource):
             return jsonify({
                 'id': format(current_user.id),
                 'email': format(current_user.email),
-                'role': format(current_user.role),
+                # 'role': format(current_user.role),
                 'access_token': access_token,
                 'refresh_token': refresh_token
             })
