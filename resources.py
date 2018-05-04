@@ -56,7 +56,7 @@ def registration():
 
 
 @app.route('/api/v1/login', methods=['POST'])
-def post():
+def login_auth():
     data = login_parser.parse_args()
     current_user = UserModel.find_by_email(data['email'])
 
@@ -91,7 +91,7 @@ def logout_access():
 
 @app.route('/api/v1/logout/refresh', methods=['POST'])
 @jwt_refresh_token_required
-def post():
+def revoke_token():
     jti = get_raw_jwt()['jti']
     try:
         revoked_token = RevokedTokenModel(jti=jti)
@@ -103,7 +103,7 @@ def post():
 
 @app.route('/api/v1/token/refresh', methods=['POST'])
 @jwt_refresh_token_required
-def post():
+def token_refresh():
     current_user = get_jwt_identity()
     access_token = create_access_token(identity=current_user)
     return {'access_token': access_token}
@@ -111,13 +111,13 @@ def post():
 
 @app.route('/api/v1/users', methods=['GET'])
 @jwt_required
-def get():
+def getUsers():
     return UserModel.return_all()
 
 
 @app.route('/api/v1/users/', methods=['DELETE'])
 @jwt_required
-def delete():
+def deleteUsers():
     return UserModel.delete_all()
 
 
