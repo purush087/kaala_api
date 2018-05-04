@@ -65,13 +65,13 @@ class UserLogin(Resource):
         if UserModel.verify_hash(data['password'], current_user.password):
             access_token = create_access_token(identity=data['email'])
             refresh_token = create_refresh_token(identity=data['email'])
-            return jsonify({
+            return {
                 'id': format(current_user.id),
                 'email': format(current_user.email),
                 # 'role': format(current_user.role),
                 'access_token': access_token,
                 'refresh_token': refresh_token
-            })
+            }
         else:
             return {'message': 'Wrong credentials'}
 
