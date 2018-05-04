@@ -11,7 +11,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(120))
     # first_name = db.Column(db.String(120))
     # last_name = db.Column(db.String(120))
-    role = db.Column(db.Integer)
+    # role = db.Column(db.Integer)
     # gender = db.Column(db.String(120))
     # skills = db.Column(db.String(120))
     # client = db.Column(db.String(120))

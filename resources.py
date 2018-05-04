@@ -17,7 +17,7 @@ parser.add_argument('password', help='This field cannot be blank', required=True
 # parser.add_argument('imageUrl', help='This field cannot be blank', required=False)
 # parser.add_argument('joining_date', help='This field cannot be blank', required=False)
 # parser.add_argument('dob', help='This field cannot be blank', required=False)
-parser.add_argument('role', help='This field cannot be blank', required=True)
+# parser.add_argument('role', help='This field cannot be blank', required=True)
 
 login_parser = reqparse.RequestParser()
 login_parser.add_argument('email', help='This field cannot be blank', required=True)
@@ -33,7 +33,7 @@ class UserRegistration(Resource):
 
         new_user = UserModel(
             email=data['email'],
-            password=UserModel.generate_hash(data['password']),
+            password=UserModel.generate_hash(data['password'])
             # first_name=data['first_name'],
             # last_name=data['last_name'],
             # gender=data['gender'],
@@ -43,7 +43,7 @@ class UserRegistration(Resource):
             # imageUrl=data['imageUrl'],
             # joining_date=data['joining_date'],
             # dob=data['dob'],
-            role=data['role']
+            # role=data['role']
         )
         try:
             new_user.save_to_db()
