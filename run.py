@@ -4,11 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
-
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}}, supports_credentials=True)
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@localhost/kaala_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'some-secret-string'
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
@@ -20,7 +19,7 @@ jwt = JWTManager(app)
 
 db = SQLAlchemy(app)
 
-import models, resources, views
+import models
 
 
 @app.before_first_request
@@ -38,6 +37,3 @@ def apply_caching(response):
 def check_if_token_in_blacklist(decrypted_token):
     jti = decrypted_token['jti']
     return models.RevokedTokenModel.is_jti_blacklisted(jti)
-
-
-api.add_resource(resources.SecretResource, '/secret')
