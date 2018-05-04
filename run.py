@@ -27,6 +27,11 @@ import views, models, resources
 def create_tables():
     db.create_all()
 
+@app.after_request
+def apply_caching(response):
+    response.headers["Content-Type"] = "application/x-www-form-urlencoded"
+    return response
+
 
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
