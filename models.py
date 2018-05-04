@@ -1,3 +1,5 @@
+from flask import jsonify
+
 from run import db
 from passlib.hash import pbkdf2_sha256 as sha256
 
@@ -6,24 +8,44 @@ class UserModel(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    first_name = db.Column(db.String(120), nullable=False)
+    last_name = db.Column(db.String(120), nullable=False)
+    role = db.Column(db.Integer)
+    gender = db.Column(db.String(120))
+    skills = db.Column(db.String(120))
+    client = db.Column(db.String(120))
+    address = db.Column(db.String(255))
+    imageUrl = db.Column(db.String(255))
+    joining_date = db.Column(db.String(255))
+    dob = db.Column(db.String(255))
 
     def save_to_db(self):
-        db.session.add(self)
+        db.session \
+            .add(self)
         db.session.commit()
 
     @classmethod
-    def find_by_username(cls, username):
-        return cls.query.filter_by(username=username).first()
+    def find_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
 
     @classmethod
     def return_all(cls):
         def to_json(x):
-            return {
-                'username': x.username,
-                'password': x.password
-            }
+            return jsonify({
+                'email': x.email,
+                'first_name': x.first_name,
+                'last_name': x.last_name,
+                'gender': x.gender,
+                'skills': x.skills,
+                'client': x.client,
+                'address': x.address,
+                'imageUrl': x.imageUrl,
+                'joining_date': x.joining_date,
+                'dob': x.dob,
+                'role': x.role
+            })
 
         return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
 
@@ -58,3 +80,5 @@ class RevokedTokenModel(db.Model):
     def is_jti_blacklisted(cls, jti):
         query = cls.query.filter_by(jti=jti).first()
         return bool(query)
+
+
