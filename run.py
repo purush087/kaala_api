@@ -14,6 +14,8 @@ app.config['SECRET_KEY'] = 'some-secret-string'
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 jwt = JWTManager(app)
 
 db = SQLAlchemy(app)
