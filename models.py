@@ -18,8 +18,8 @@ class UserModel(db.Model):
     client = db.Column(db.String(120))
     address = db.Column(db.String(255))
     imageUrl = db.Column(db.String(255))
-    joining_date = db.Column(db.DateTime)
-    dob = db.Column(db.DateTime)
+    joining_date = db.Column(db.String(255))
+    dob = db.Column(db.String(255))
 
     def save_to_db(self):
         db.session \
