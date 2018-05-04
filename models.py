@@ -6,20 +6,19 @@ from passlib.hash import pbkdf2_sha256 as sha256
 
 class UserModel(db.Model):
     __tablename__ = 'users'
-
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
-    first_name = db.Column(db.String(120), nullable=False)
-    last_name = db.Column(db.String(120), nullable=False)
+    password = db.Column(db.String(120))
+    # first_name = db.Column(db.String(120))
+    # last_name = db.Column(db.String(120))
     role = db.Column(db.Integer)
-    gender = db.Column(db.String(120))
-    skills = db.Column(db.String(120))
-    client = db.Column(db.String(120))
-    address = db.Column(db.String(255))
-    imageUrl = db.Column(db.String(255))
-    joining_date = db.Column(db.String(255))
-    dob = db.Column(db.String(255))
+    # gender = db.Column(db.String(120))
+    # skills = db.Column(db.String(120))
+    # client = db.Column(db.String(120))
+    # address = db.Column(db.String(255))
+    # imageUrl = db.Column(db.String(255))
+    # joining_date = db.Column(db.String(255))
+    # dob = db.Column(db.String(255))
 
     def save_to_db(self):
         db.session \

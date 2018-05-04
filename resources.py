@@ -8,15 +8,15 @@ from models import UserModel, RevokedTokenModel
 parser = reqparse.RequestParser()
 parser.add_argument('email', help='This field cannot be blank', required=True)
 parser.add_argument('password', help='This field cannot be blank', required=True)
-parser.add_argument('first_name', help='This field cannot be blank', required=False)
-parser.add_argument('last_name', help='This field cannot be blank', required=False)
-parser.add_argument('gender', help='This field cannot be blank', required=False)
-parser.add_argument('skills', help='This field cannot be blank', required=False)
-parser.add_argument('client', help='This field cannot be blank', required=False)
-parser.add_argument('address', help='This field cannot be blank', required=False)
-parser.add_argument('imageUrl', help='This field cannot be blank', required=False)
-parser.add_argument('joining_date', help='This field cannot be blank', required=False)
-parser.add_argument('dob', help='This field cannot be blank', required=False)
+# parser.add_argument('first_name', help='This field cannot be blank', required=False)
+# parser.add_argument('last_name', help='This field cannot be blank', required=False)
+# parser.add_argument('gender', help='This field cannot be blank', required=False)
+# parser.add_argument('skills', help='This field cannot be blank', required=False)
+# parser.add_argument('client', help='This field cannot be blank', required=False)
+# parser.add_argument('address', help='This field cannot be blank', required=False)
+# parser.add_argument('imageUrl', help='This field cannot be blank', required=False)
+# parser.add_argument('joining_date', help='This field cannot be blank', required=False)
+# parser.add_argument('dob', help='This field cannot be blank', required=False)
 parser.add_argument('role', help='This field cannot be blank', required=True)
 
 login_parser = reqparse.RequestParser()
@@ -34,15 +34,15 @@ class UserRegistration(Resource):
         new_user = UserModel(
             email=data['email'],
             password=UserModel.generate_hash(data['password']),
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            gender=data['gender'],
-            skills=data['skills'],
-            client=data['client'],
-            address=data['address'],
-            imageUrl=data['imageUrl'],
-            joining_date=data['joining_date'],
-            dob=data['dob'],
+            # first_name=data['first_name'],
+            # last_name=data['last_name'],
+            # gender=data['gender'],
+            # skills=data['skills'],
+            # client=data['client'],
+            # address=data['address'],
+            # imageUrl=data['imageUrl'],
+            # joining_date=data['joining_date'],
+            # dob=data['dob'],
             role=data['role']
         )
         try:
