@@ -4,7 +4,7 @@ from flask_jwt_extended import (
     create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 
 from models import UserModel, RevokedTokenModel
-from run import app
+
 
 parser = reqparse.RequestParser()
 parser.add_argument('email', help='This field cannot be blank', required=True)
@@ -61,7 +61,7 @@ class UserLogin(Resource):
         current_user = UserModel.find_by_email(data['email'])
 
         if not current_user:
-            return {'message': 'User {} doesn\'t exist'.format(data['email'])}
+            return {'message': 'User {} doesn\'t exist'.format(data['email'])}, 404
 
         if UserModel.verify_hash(data['password'], current_user.password):
             access_token = create_access_token(identity=data['email'])
