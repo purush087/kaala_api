@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
@@ -7,7 +9,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}}, supports_credentials=True)
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'some-secret-string'
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
@@ -18,6 +20,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 jwt = JWTManager(app)
 
 db = SQLAlchemy(app)
+print(os.environ['APP_SETTINGS'])
 
 import views, models, resources
 

@@ -1,3 +1,5 @@
+import datetime
+
 from flask import jsonify
 
 from run import db
@@ -9,16 +11,8 @@ class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120))
-    # first_name = db.Column(db.String(120))
-    # last_name = db.Column(db.String(120))
-    # role = db.Column(db.Integer)
-    # gender = db.Column(db.String(120))
-    # skills = db.Column(db.String(120))
-    # client = db.Column(db.String(120))
-    # address = db.Column(db.String(255))
-    # imageUrl = db.Column(db.String(255))
-    # joining_date = db.Column(db.String(255))
-    # dob = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
 
     def save_to_db(self):
         db.session \
@@ -33,29 +27,12 @@ class UserModel(db.Model):
     def return_all(cls):
         def to_json(x):
             return jsonify({
-                'email': x.email,
-                'first_name': x.first_name,
-                'last_name': x.last_name,
-                'gender': x.gender,
-                'skills': x.skills,
-                'client': x.client,
-                'address': x.address,
-                'imageUrl': x.imageUrl,
-                'joining_date': x.joining_date,
-                'dob': x.dob,
-                'role': x.role
+                'id': x.id,
+                'email': x.email
             })
 
         return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
 
-    @classmethod
-    def delete_all(cls):
-        try:
-            num_rows_deleted = db.session.query(cls).delete()
-            db.session.commit()
-            return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
-        except:
-            return {'message': 'Something went wrong'}
 
     @staticmethod
     def generate_hash(password):
