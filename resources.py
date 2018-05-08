@@ -17,7 +17,6 @@ login_parser.add_argument('password', help='This field cannot be blank', require
 leave_parser = reqparse.RequestParser()
 leave_parser.add_argument('leave_type', help='This field cannot be blank', required=True)
 leave_parser.add_argument('description', help='This field cannot be blank', required=True)
-leave_parser.add_argument('employee_id', help='This field cannot be blank', required=True)
 leave_parser.add_argument('from_date', help='This field cannot be blank', required=True)
 leave_parser.add_argument('to_date', help='This field cannot be blank', required=True)
 leave_parser.add_argument('num_of_days', help='This field cannot be blank', required=True)
@@ -107,10 +106,11 @@ class AddLeave(Resource):
     @jwt_required
     def post(self):
         data = leave_parser.parse_args()
+        current_user = UserModel.find_by_email(get_jwt_identity())
         new_leave = LeavesModel(
             leave_type=data['leave_type'],
             description=data['description'],
-            employee_id=data['employee_id'],
+            employee_id=current_user.id,
             from_date=data['from_date'],
             to_date=data['to_date'],
             num_of_days=data['num_of_days'],
@@ -123,13 +123,13 @@ class AddLeave(Resource):
             return {'message': 'Something went wrong'}, 500
 
 
-class getAllLeaves(Resource):
+class GetAllLeaves(Resource):
     @jwt_required
     def get(self):
-        return LeavesModel.get_all_leaves()
+        return LeavesModel.get_all_leaves(), 200
 
 
 class GetLeavesByEmployee(Resource):
     @jwt_required
     def get(self, pk):
-        return LeavesModel.get_applied_leaves(pk)
+        return LeavesModel.get_applied_leaves(pk), 200
