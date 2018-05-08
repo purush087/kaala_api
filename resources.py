@@ -104,6 +104,7 @@ class AllUsers(Resource):
 
 
 class AddLeave(Resource):
+    @jwt_required
     def post(self):
         data = leave_parser.parse_args()
         new_leave = LeavesModel(
@@ -123,10 +124,12 @@ class AddLeave(Resource):
 
 
 class getAllLeaves(Resource):
+    @jwt_required
     def get(self):
         return LeavesModel.get_all_leaves()
 
 
 class GetLeavesByEmployee(Resource):
+    @jwt_required
     def get(self, pk):
         return LeavesModel.get_applied_leaves(pk)
