@@ -26,12 +26,11 @@ class UserModel(db.Model):
     @classmethod
     def return_all(cls):
         def to_json(x):
-            return jsonify({
+            return {
                 'id': x.id,
                 'email': x.email,
                 'role': x.role
-            })
-
+            }
         return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
 
     @staticmethod
