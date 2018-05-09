@@ -51,4 +51,6 @@ api.add_resource(resources.AllUsers, '/users')
 api.add_resource(resources.AddLeave, '/leaves')
 api.add_resource(resources.GetAllLeaves, '/leaves/all')
 api.add_resource(resources.GetLeavesByEmployee, '/leaves/<pk>')
+api.add_resource(resources.LeaveType, '/leaves/getTypes')
+api.add_resource(resources.AddleaveTypes, '/leaves/addTypes')
 

@@ -31,6 +31,7 @@ class UserModel(db.Model):
                 'email': x.email,
                 'role': x.role
             }
+
         return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
 
     @staticmethod
@@ -107,3 +108,22 @@ class LeavesModel(db.Model):
 
     def submit_update_leave_by_id(self):
         pass
+
+class LeaveTypesModel(db.Model):
+    __tablename__='leave_types'
+    id = db.Column(db.Integer, primary_key=True)
+    leave_type = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=False)
+
+    @classmethod
+    def get_leave_types(cls):
+        def to_json(x):
+            return {
+                'id': x.id,
+                'leave_type': x.leave_type
+            }
+        return {'types': list(map(lambda x: to_json(x), LeaveTypesModel.query.all()))}
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()

@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import (
     create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 
-from models import UserModel, RevokedTokenModel, LeavesModel
+from models import UserModel, RevokedTokenModel, LeavesModel, LeaveTypesModel
 
 parser = reqparse.RequestParser()
 parser.add_argument('email', help='This field cannot be blank', required=True)
@@ -13,6 +13,10 @@ parser.add_argument('role', help='This field cannot be blank', required=True)
 login_parser = reqparse.RequestParser()
 login_parser.add_argument('email', help='This field cannot be blank', required=True)
 login_parser.add_argument('password', help='This field cannot be blank', required=True)
+
+leaveType_parser = reqparse.RequestParser()
+leaveType_parser.add_argument('leave_type', help='manadatory field', required=True)
+leaveType_parser.add_argument('description', help='Optional field')
 
 leave_parser = reqparse.RequestParser()
 leave_parser.add_argument('leave_type', help='This field cannot be blank', required=True)
@@ -133,3 +137,24 @@ class GetLeavesByEmployee(Resource):
     @jwt_required
     def get(self, pk):
         return LeavesModel.get_applied_leaves(pk), 200
+
+
+class LeaveType(Resource):
+    @jwt_required
+    def get(self):
+        return LeaveTypesModel.get_leave_types()
+
+
+class AddleaveTypes(Resource):
+    @jwt_required
+    def post(self):
+        data = leaveType_parser.parse_args()
+        new_leave_type = LeaveTypesModel(
+            leave_type=data['leave_type'],
+            description=data['description']
+        )
+        try:
+            new_leave_type.save_to_db()
+            return {'message': 'Leave type added successfully'}
+        except:
+            return {'message': 'Unable to add data'}, 500
