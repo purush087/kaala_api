@@ -75,6 +75,9 @@ class LeavesModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def update_to_db(self):
+        return db.session.commit()
+
     @classmethod
     def get_applied_leaves(cls, pk):
         def to_json(x):
@@ -105,6 +108,10 @@ class LeavesModel(db.Model):
             }
 
         return {'Aways': list(map(lambda x: to_json(x), LeavesModel.query.all()))}
+
+    @classmethod
+    def get_particular_leave(cls, pk):
+        return LeavesModel.query.get(pk)
 
     def submit_update_leave_by_id(self):
         pass

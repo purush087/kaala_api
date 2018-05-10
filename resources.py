@@ -138,11 +138,28 @@ class GetLeavesByEmployee(Resource):
     def get(self, pk):
         return LeavesModel.get_applied_leaves(pk), 200
 
-
 class LeaveType(Resource):
     @jwt_required
     def get(self):
         return LeaveTypesModel.get_leave_types()
+
+class EditLeaveByEmployee(Resource):
+    @jwt_required
+    def put(self, pk):
+        data = leave_parser.parse_args()
+        prev_leave = LeavesModel.get_particular_leave(pk)
+        prev_leave.leave_type = data['leave_type']
+        prev_leave.description = data['description']
+        prev_leave.from_date = data['from_date']
+        prev_leave.to_date = data['to_date']
+        prev_leave.num_of_days = data['num_of_days']
+        prev_leave.status = data['status']
+
+        try:
+            prev_leave.update_to_db()
+            return {'message': 'Away updated successfully'}
+        except:
+            return {'message': 'Something went wrong'}, 500
 
 
 class AddleaveTypes(Resource):
