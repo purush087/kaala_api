@@ -121,13 +121,22 @@ class LeaveTypesModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     leave_type = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
+    num_of_days = db.Column(db.Integer, nullable=False)
+    validity = db.Column(db.String, nullable=False)
+    carry_forward = db.Column(db.String, nullable=False)
+    employee_id = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
 
     @classmethod
     def get_leave_types(cls):
         def to_json(x):
             return {
                 'id': x.id,
-                'leave_type': x.leave_type
+                'leave_type': x.leave_type,
+                'num_of_days': x.num_of_days,
+                'validity': x.validity,
+                'carry_forward': x.carry_forward
             }
         return {'types': list(map(lambda x: to_json(x), LeaveTypesModel.query.all()))}
 

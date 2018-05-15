@@ -17,6 +17,9 @@ login_parser.add_argument('password', help='This field cannot be blank', require
 leaveType_parser = reqparse.RequestParser()
 leaveType_parser.add_argument('leave_type', help='manadatory field', required=True)
 leaveType_parser.add_argument('description', help='Optional field')
+leaveType_parser.add_argument('num_of_days', help='manadatory field', required=True)
+leaveType_parser.add_argument('validity', help='manadatory field', required=True)
+leaveType_parser.add_argument('carry_forward', help='manadatory field', required=True)
 
 leave_parser = reqparse.RequestParser()
 leave_parser.add_argument('leave_type', help='This field cannot be blank', required=True)
@@ -25,7 +28,6 @@ leave_parser.add_argument('from_date', help='This field cannot be blank', requir
 leave_parser.add_argument('to_date', help='This field cannot be blank', required=True)
 leave_parser.add_argument('num_of_days', help='This field cannot be blank', required=True)
 leave_parser.add_argument('status', help='This field cannot be blank', required=True)
-
 
 class UserRegistration(Resource):
     def post(self):
@@ -166,9 +168,14 @@ class AddleaveTypes(Resource):
     @jwt_required
     def post(self):
         data = leaveType_parser.parse_args()
+        current_user = UserModel.find_by_email(get_jwt_identity())
         new_leave_type = LeaveTypesModel(
             leave_type=data['leave_type'],
-            description=data['description']
+            description=data['description'],
+            num_of_days=data['num_of_days'],
+            validity=data['validity'],
+            carry_forward=data['carry_forward'],
+            employee_id=current_user.id
         )
         try:
             new_leave_type.save_to_db()
