@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/purushothamreddy/Dev/flask-jwt/env"
+set -gx VIRTUAL_ENV "/Users/testvagrant/Development/kaala_api/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

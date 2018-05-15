@@ -1,4 +1,4 @@
-#!/Users/purushothamreddy/Dev/flask-jwt/env/bin/python3.6
+#!/Users/testvagrant/Development/kaala_api/env/bin/python3.6
 # EASY-INSTALL-ENTRY-SCRIPT: 'Mako==1.0.7','console_scripts','mako-render'
 __requires__ = 'Mako==1.0.7'
 import re

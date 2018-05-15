@@ -83,7 +83,7 @@ class LeavesModel(db.Model):
         def to_json(x):
             return {
                 'id': x.id,
-                'leave_type': x.leave_type,
+                'leave_type': LeaveTypesModel.get_leave_type(x.leave_type),
                 'description': x.description,
                 'num_of_days': x.num_of_days,
                 'from_date': str(x.from_date),
@@ -99,7 +99,7 @@ class LeavesModel(db.Model):
             return {
                 'id': x.id,
                 'employee_id': x.employee_id,
-                'leave_type': x.leave_type,
+                'leave_type': LeaveTypesModel.get_leave_type(x.leave_type),
                 'description': x.description,
                 'num_of_days': x.num_of_days,
                 'from_date': str(x.from_date),
@@ -130,6 +130,11 @@ class LeaveTypesModel(db.Model):
                 'leave_type': x.leave_type
             }
         return {'types': list(map(lambda x: to_json(x), LeaveTypesModel.query.all()))}
+
+    @classmethod
+    def get_leave_type(cls, pk):
+        leaveType = LeaveTypesModel.query.filter_by(id=pk).first()
+        return leaveType.__getattribute__('leave_type')
 
     def save_to_db(self):
         db.session.add(self)

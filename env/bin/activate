@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/purushothamreddy/Dev/flask-jwt/env"
+VIRTUAL_ENV="/Users/testvagrant/Development/kaala_api/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
