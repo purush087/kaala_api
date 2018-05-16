@@ -24,6 +24,11 @@ class UserModel(db.Model):
         return cls.query.filter_by(email=email).first()
 
     @classmethod
+    def find_role(cls, id):
+        employee = cls.query.filter_by(id=id).first()
+        return True if employee.__getattribute__('role') == 'admin' else False
+
+    @classmethod
     def return_all(cls):
         def to_json(x):
             return {
@@ -145,6 +150,19 @@ class LeaveTypesModel(db.Model):
         leaveType = LeaveTypesModel.query.filter_by(id=pk).first()
         return leaveType.__getattribute__('leave_type')
 
+    @classmethod
+    def get_particular_leaveType(cls, pk):
+        return LeaveTypesModel.query.get(pk)
+
     def save_to_db(self):
         db.session.add(self)
+        db.session.commit()
+
+    def update_to_db(self):
+        db.session.commit()
+
+    @classmethod
+    def delete_leaveType(self, id):
+        leaveType = LeaveTypesModel.get_particular_leaveType(id)
+        db.session.delete(leaveType)
         db.session.commit()

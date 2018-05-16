@@ -140,7 +140,7 @@ class GetLeavesByEmployee(Resource):
     def get(self, pk):
         return LeavesModel.get_applied_leaves(pk), 200
 
-class LeaveType(Resource):
+class GetLeaveTypes(Resource):
     @jwt_required
     def get(self):
         return LeaveTypesModel.get_leave_types()
@@ -164,11 +164,16 @@ class EditLeaveByEmployee(Resource):
             return {'message': 'Something went wrong'}, 500
 
 
-class AddleaveTypes(Resource):
+class AddLeaveTypes(Resource):
     @jwt_required
     def post(self):
         data = leaveType_parser.parse_args()
         current_user = UserModel.find_by_email(get_jwt_identity())
+        is_current_user_admin = UserModel.find_role(current_user.id)
+
+        if not is_current_user_admin:
+            return {'message': 'User {} is not admin'.format(current_user.email)}, 400
+
         new_leave_type = LeaveTypesModel(
             leave_type=data['leave_type'],
             description=data['description'],
@@ -182,3 +187,44 @@ class AddleaveTypes(Resource):
             return {'message': 'Leave type added successfully'}
         except:
             return {'message': 'Unable to add data'}, 500
+
+
+class EditLeaveTypes(Resource):
+    @jwt_required
+    def put(self, pk):
+        data = leaveType_parser.parse_args()
+        current_user = UserModel.find_by_email(get_jwt_identity())
+        is_current_user_admin = UserModel.find_role(current_user.id)
+
+        if not is_current_user_admin:
+            return {'message': 'User {} is not admin'.format(current_user.email)}, 400
+
+        prev_leave_type = LeaveTypesModel.get_particular_leaveType(pk)
+        prev_leave_type.leave_type = data['leave_type']
+        prev_leave_type.description = data['description']
+        prev_leave_type.num_of_days = data['num_of_days']
+        prev_leave_type.validity = data['validity']
+        prev_leave_type.carry_forward = data['carry_forward']
+        prev_leave_type.employee_id = current_user.id
+
+        try:
+            prev_leave_type.update_to_db()
+            return {'message': 'Leave type updated successfully'}
+
+        except:
+            return {'message': 'Something went wrong'}, 500
+
+class DeleteLeaveTypes(Resource):
+    @jwt_required
+    def delete(self, id):
+        current_user = UserModel.find_by_email(get_jwt_identity())
+        is_current_user_admin = UserModel.find_role(current_user.id)
+
+        if not is_current_user_admin:
+            return {'message': 'User {} is not admin'.format(current_user.email)}, 400
+
+        try:
+            LeaveTypesModel.delete_leaveType(id)
+            return {'message': 'Leave type deleted successfully'}
+        except:
+            return {'message': 'Something went wrong'}, 500
