@@ -1,4 +1,8 @@
+import random
+import string
+
 from flask import jsonify
+import smtplib
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import (
     create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
@@ -7,6 +11,7 @@ from models import UserModel, RevokedTokenModel, LeavesModel, LeaveTypesModel
 
 parser = reqparse.RequestParser()
 parser.add_argument('email', help='This field cannot be blank', required=True)
+parser.add_argument('emp_id', help='This field cannot be blank', required=True)
 parser.add_argument('password', help='This field cannot be blank', required=True)
 parser.add_argument('role', help='This field cannot be blank', required=True)
 
@@ -29,25 +34,40 @@ leave_parser.add_argument('to_date', help='This field cannot be blank', required
 leave_parser.add_argument('num_of_days', help='This field cannot be blank', required=True)
 leave_parser.add_argument('status', help='This field cannot be blank', required=True)
 
+
 class UserRegistration(Resource):
     def post(self):
         data = parser.parse_args()
 
         if UserModel.find_by_email(data['email']):
             return {'message': 'User {} already exists'.format(data['email'])}, 400
-
+        random_char = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(8)])
+        content = "your password for kaala app is " + random_char
+        mail=""
+        password=""
+        self.send_email(mail, password, data['email'], content)
         new_user = UserModel(
+            emp_id=data['emp_id'],
             email=data['email'],
-            password=UserModel.generate_hash(data['password']),
+            password=UserModel.generate_hash(random_char),
             role=data['role']
         )
+
         try:
             new_user.save_to_db()
             return {
-                'message': 'User {} is created'.format(data['email'])
+                'message': 'User {} is created'.format(data['email']),
+                'password': random_char
             }
         except:
             return {'message': 'Something went wrong'}, 500
+
+    def send_email(self, mail, password, to, content):
+        mail = smtplib.SMTP('smtp.gmail.com', 587)
+        mail.starttls()
+        mail.login(mail, password)
+        mail.sendmail(mail, to, content)
+        mail.close()
 
 
 class UserLogin(Resource):
@@ -140,10 +160,12 @@ class GetLeavesByEmployee(Resource):
     def get(self, pk):
         return LeavesModel.get_applied_leaves(pk), 200
 
+
 class GetLeaveTypes(Resource):
     @jwt_required
     def get(self):
         return LeaveTypesModel.get_leave_types()
+
 
 class EditLeaveByEmployee(Resource):
     @jwt_required
@@ -213,6 +235,7 @@ class EditLeaveTypes(Resource):
 
         except:
             return {'message': 'Something went wrong'}, 500
+
 
 class DeleteLeaveTypes(Resource):
     @jwt_required
